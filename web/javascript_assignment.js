@@ -21,11 +21,13 @@ formButton2.on("click", calculate);
 
 //part 3
 function hideFunction(event) {
-    $(
+    $('#paragraphToHide');
 }
 
 var formButton3 = $('#button3');
 formButton3.on("click", hideFunction);
+
+
 
 
 
