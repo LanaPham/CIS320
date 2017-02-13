@@ -70,16 +70,77 @@
       </div>
       <div class="modal-body">
 
-<form id="my-form">
+
+<!-- this is the code before revision -->
+<!--<form id="my-form">
   <div class="form-group">
   <label for="firstName">First Name:</label>
   <input type="hidden" id="id" name="id" class="form-control" /><br />
   <input type="text" id="firstName" name="firstName" class="form-control" placeholder="First name"/><br />
+  <label for="lastName">Last Name:</label>
   <input type="text" id="lastName" name="lastName" class="form-control" placeholder="Last name"/><br />
+  <label for="email">Email:</label>
   <input type="email" id="email" name="email" class="form-control" placeholder="Email address"/><br />
+  <label for="phoneField">Phone Number:</label>
+  <input type="number" id="phoneField" name="phoneField" class="form-control" placeholder = "Phone number"/><br />
+  <label for="birthday">Birthday:</label>
+  <input type="number" id="birthday" name="birthday" class="form-control" placeholder="Birthday" /><br />
+  </div>
+</form>-->
 
+<form id="my-form">
+  <div class="form-group">
+
+    <input type="hidden" id="id" name="id" class="form-control" /><br />
+
+<!--    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" name="firstName" class="form-control" placeholder="First name"/><br />-->
+    <div id="firstNameDiv" class="form-group has-feedback">
+      <label class="control-label" for="firstName">First Name:</label>
+      <input type="text" id="firstName" class="form-control" placeholder="First name" aria-describedby="firstNameStatus"/>
+      <span id="firstNameGlyph" class="glyphicon form-control-feedback" aria-hidden="true"></span>
+      <span id="firstNameStatus" class="sr-only"></span>
+    </div>
+
+<!--    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" name="lastName" class="form-control" placeholder="Last name"/><br />-->
+    <div id="lastNameDiv" class="form-group has-feedback">
+      <label class="control-label" for="lastName">Last Name:</label>
+      <input type="text" id="lastName" name="lastName" class="form-control" placeholder="First name" aria-describedby="lastNameStatus"/>
+      <span id="lastNameGlyph" class="glyphicon form-control-feedback" aria-hidden="true"></span>
+      <span id="lastNameStatus" class="sr-only"></span>
+    </div>
+
+    <!--<label for="email">Email:</label>
+    <input type="email" id="email" name="email" class="form-control" placeholder="Email address"/><br />-->
+    <div id="emailDiv" class="form-group has-feedback">
+      <label class="control-label" for="email">Email Address:</label>
+      <input type="email" id="email" name="email" class="form-control" placeholder="email" aria-describedby="emailStatus"/>
+      <span id="emailGlyph" class="glyphicon form-control-feedback" aria-hidden="true"></span>
+      <span id="emailStatus" class="sr-only"></span>
+    </div>
+
+    <!--<label for="phoneField">Phone Number:</label>
+    <input type="number" id="phoneField" name="phoneField" class="form-control" placeholder = "Phone number"/><br />-->
+    <div id="phoneFieldDiv" class="form-group has-feedback">
+      <label class="control-label" for="phoneField">Phone Number:</label>
+      <input type="text" id="phoneField" name="phoneField" class="form-control" placeholder="555-555-5555" aria-describedby="phoneFieldStatus"/>
+      <span id="phoneFieldGlyph" class="glyphicon form-control-feedback" aria-hidden="true"></span>
+      <span id="phoneFieldStatus" class="sr-only"></span>
+    </div>
+
+<!--    <label for="birthday">Birthday:</label>
+    <input type="number" id="birthday" name="birthday" class="form-control" placeholder="Birthday" /><br />-->
+    <div id="birthdayDiv" class="form-group has-feedback">
+      <label class="control-label" for="birthday">Birthday:</label>
+      <input type="text" id="birthday" name="birthday" class="form-control" placeholder="mm/dd/year" aria-describedby="birthdayStatus"/>
+      <span id="birthdayGlyph" class="glyphicon form-control-feedback" aria-hidden="true"></span>
+      <span id="birthdayStatus" class="sr-only"></span>
+    </div>
   </div>
 </form>
+
+
 
       </div>
       <div class="modal-footer">
