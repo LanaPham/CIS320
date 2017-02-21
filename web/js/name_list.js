@@ -1,20 +1,18 @@
 var url = "api/name_list_get";
-
-$.getJSON(url, null, function(json_result) {
-        for (var i = 0; i < json_result.length; i++) {
-            $("#datatable").append("<tr><td>" + json_result[i].id + "</td><td>"
-            + json_result[i].first + " " + json_result[i].last + "</td><td>"
-            + json_result[i].email + "</td><td>"
-            + json_result[i].phone + "</td><td>"
-            + json_result[i].birthday + "</td></tr>");
-
-            //$("#datatable")[0].rows[0].remove(); // this removes the <th> which is not what I want
-            //$("#datatable td:first").remove(); //this removes first cell which is ID
+function updateTable() {
+    $.getJSON(url, null, function (json_result) {
+            for (var i = 0; i < json_result.length; i++) {
+                $("#datatable").append("<tr><td>" + json_result[i].id + "</td><td>"
+                    + json_result[i].first + " " + json_result[i].last + "</td><td>"
+                    + json_result[i].email + "</td><td>"
+                    + json_result[i].phone + "</td><td>"
+                    + json_result[i].birthday + "</td></tr>");
+            }
+            console.log("Done");
         }
-        console.log("Done");
-    }
-);
-
+    );
+}
+updateTable();
 // There's a button in the form with the ID "addItem"
 // Associate the function showDialogAdd with it.
 var addItemButton = $('#addItem');
@@ -33,6 +31,7 @@ function showDialogAdd() {
     $('#birthday').val("");
 
     //Removes the outline colored box and the glyphicon
+    //clears the boxes when reopened
     $('#firstNameDiv').removeClass("has-success").removeClass("has-error");
     $('#firstNameGlyph').removeClass("glyphicon-ok").removeClass("glyphicon-remove");
 
@@ -52,10 +51,10 @@ function showDialogAdd() {
     $('#myModal').modal('show');
 }
 
-//Step 5 - add function to "save changes" button
 var formSaveButton = $('#saveChanges');
 formSaveButton.on("click", saveButton);
 
+//Step 5 - add function to "save changes" button
 function saveButton() {
     var userInputFirstName = $('#firstName').val();
     var inputFirstName = /^([A-Za-z]{1,20})$/;
@@ -70,12 +69,13 @@ function saveButton() {
     var inputPhone = /^([0-9]{3})[-]([0-9]{3})[-]([0-9]{4})$/;
 
     var userInputBirthday = $('#birthday').val();
-    //http://www.mkyong.com/regular-expressions/how-to-validate-date-with-regular-expression/
-    var inputBirthday = /^(0[1-9]|1[012])[/](0[1-9]|[12][0-9]|3[01])[/](19|20)\d\d$/;
+    //  year/mm/dd
+    var inputBirthday = /^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/;
+
+    var valid_form = true;
 
     if (inputFirstName.test(userInputFirstName)) {
         // Set style for outline of form field
-
         $('#firstNameDiv').removeClass("has-error");
         $('#firstNameDiv').addClass("has-success");
 
@@ -120,6 +120,7 @@ function saveButton() {
         console.log("Email is ok");
     }
     else {
+        valid_form = false;
         $('#emailDiv').removeClass("has-success").addClass("has-error");
         $('#emailGlyph').removeClass("glyphicon-ok").addClass("glyphicon-remove");
         $('emailStatus').val("error");
@@ -155,6 +156,29 @@ function saveButton() {
         $('birthdayStatus').val("error");
         console.log("Birthday is bad");
     }
-    console.log("Save button was selected")
+    console.log("Save button was selected");
 
+    if(valid_form) {
+        var url = "api/name_list_edit";
+        var fieldValueFirstName = $("#firstName").val();
+        var fieldValueLastName = $("#lastName").val();
+        var fieldValueEmail = $("#email").val();
+        var fieldValuePhone = $("#phoneField").val();
+        var fieldValueBirthday = $("#birthday").val();
+
+        var dataToServer = { firstName : fieldValueFirstName, lastName: fieldValueLastName, email : fieldValueEmail, phoneField: fieldValuePhone, birthday : fieldValueBirthday} ;
+
+        $.post(url, dataToServer, function (dataFromServer) {
+            console.log(dataFromServer);
+            console.log("Finished calling servlet.");
+            $('#myModal').modal('hide');
+            //how to clear body of the table - could readd in the columns/rows, or remove individual rows
+            $('#datatable tbody').remove();
+            updateTable();
+        });
+    }
+    else {
+        valid_form = false;
+        console.log("Not all fields were valid");
+    }
 }
