@@ -8,10 +8,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.google.gson.Gson;
 
 
 
+//Back-End Validate
 
 /**
  * Created by Lana on 2/20/2017.
@@ -19,6 +23,24 @@ import com.google.gson.Gson;
 @WebServlet(name = "NameListEdit")
 
 public class NameListEdit extends javax.servlet.http.HttpServlet {
+
+    private Pattern firstNameValidationPattern;
+    private Pattern lastNameValidationPattern;
+    private Pattern emailValidationPattern;
+    private Pattern phoneValidationPattern;
+    private Pattern birthdayValidationPattern;
+
+
+    public NameListEdit() {
+        // --- Compile and set up all the regular expression patterns here ---
+        firstNameValidationPattern = Pattern.compile("^[A-Za-z]{1,20}$");
+        lastNameValidationPattern = Pattern.compile("^[A-Za-z]{1,20}$");
+        emailValidationPattern = Pattern.compile("\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$");
+        phoneValidationPattern = Pattern.compile("([0-9]{3})[-]([0-9]{3})[-]([0-9]{4})$");
+        birthdayValidationPattern = Pattern.compile("[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}$");
+    }
+
+    //Handle Post requests
     protected void doPost(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
@@ -45,6 +67,43 @@ public class NameListEdit extends javax.servlet.http.HttpServlet {
         person.setBirthday(birthday);
 
         PersonDAO.editPerson(person);
+
+
+
+        Matcher testFirstName = firstNameValidationPattern.matcher(firstName);
+        if (testFirstName.find( )) {
+            out.println("Passed validation");
+        } else {
+            out.println("Did not pass validation");
+        }
+
+        Matcher testLastName = lastNameValidationPattern.matcher(lastName);
+        if (testLastName.find( )) {
+            out.println("Passed validation");
+        } else {
+            out.println("Did not pass validation");
+        }
+
+        Matcher testEmail = emailValidationPattern.matcher(email);
+        if (testEmail.find( )) {
+            out.println("Passed validation");
+        } else {
+            out.println("Did not pass validation");
+        }
+
+        Matcher testPhoneField = phoneValidationPattern.matcher(phoneField);
+        if (testPhoneField.find( )) {
+            out.println("Passed validation");
+        } else {
+            out.println("Did not pass validation");
+        }
+
+        Matcher testBirthday = birthdayValidationPattern.matcher(birthday);
+        if (testBirthday.find( )) {
+            out.println("Passed validation");
+        } else {
+            out.println("Did not pass validation");
+        }
 
     }
 }

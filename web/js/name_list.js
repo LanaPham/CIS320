@@ -6,9 +6,13 @@ function updateTable() {
                     + json_result[i].first + " " + json_result[i].last + "</td><td>"
                     + json_result[i].email + "</td><td>"
                     + json_result[i].phone + "</td><td>"
-                    + json_result[i].birthday + "</td></tr>");
+                    + json_result[i].birthday + "</td>"
+                    + "<td><button type='button' name='delete' class='deleteButton btn' value='" + json_result[i].id + "'>Delete</button></td></tr>");
             }
+
             console.log("Done");
+            var buttons = $(".deleteButton");
+            buttons.on("click", deleteItem);
         }
     );
 }
@@ -17,6 +21,26 @@ updateTable();
 // Associate the function showDialogAdd with it.
 var addItemButton = $('#addItem');
 addItemButton.on("click", showDialogAdd);
+
+//delete button
+function deleteItem(e) {
+
+        var url = "api/name_list_delete";
+        var id = e.target.value;
+        console.log("grabbing id:" + id);
+        var dataToServer = { id : id};
+
+        $.post(url, dataToServer, function (dataFromServer) {
+            console.log("Data from Server:" + dataFromServer);
+            console.log("Finished calling delete servlet.");
+            //how to clear body of the table - could read in the columns/rows, or remove individual rows
+            $('#datatable tbody').remove();
+            updateTable();
+        });
+
+    console.debug("Delete");
+    console.debug(e.target.value);
+}
 
 // Called when "Add Item" button is clicked
 function showDialogAdd() {
@@ -63,7 +87,10 @@ function saveButton() {
     var inputLastName = /^([A-Za-z]{1,20})$/;
 
     var userInputEmail = $('#email').val();
-    var inputEmail = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+    var inputEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    //var inputEmail = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+
+
 
     var userInputPhone = $('#phoneField').val();
     var inputPhone = /^([0-9]{3})[-]([0-9]{3})[-]([0-9]{4})$/;
@@ -94,6 +121,7 @@ function saveButton() {
         $('#firstNameGlyph').addClass("glyphicon-remove");
         $('firstNameStatus').val("error");
         console.log("First name is Bad");
+        valid_form = false;
     }
 
     if (inputLastName.test(userInputLastName)) {
@@ -109,6 +137,7 @@ function saveButton() {
         $('#lastNameGlyph').removeClass("glyphicon-ok").addClass("glyphicon-remove");
         $('lastNameStatus').val("error");
         console.log("Last name is bad");
+        valid_form = false;
     }
 
     if (inputEmail.test(userInputEmail)) {
@@ -125,6 +154,7 @@ function saveButton() {
         $('#emailGlyph').removeClass("glyphicon-ok").addClass("glyphicon-remove");
         $('emailStatus').val("error");
         console.log("Email is bad");
+        valid_form = false;
     }
 
     if (inputPhone.test(userInputPhone)) {
@@ -140,6 +170,7 @@ function saveButton() {
         $('#phoneFieldGlyph').removeClass("glyphicon-ok").addClass("glyphicon-remove");
         $('phoneFieldStatus').val("error");
         console.log("phone is bad");
+        valid_form = false;
     }
 
     if (inputBirthday.test(userInputBirthday)) {
@@ -155,8 +186,10 @@ function saveButton() {
         $('#birthdayGlyph').removeClass("glyphicon-ok").addClass("glyphicon-remove");
         $('birthdayStatus').val("error");
         console.log("Birthday is bad");
+        valid_form = false;
     }
     console.log("Save button was selected");
+    valid_form = true; //this is to temporaily pause the front end
 
     if(valid_form) {
         var url = "api/name_list_edit";
