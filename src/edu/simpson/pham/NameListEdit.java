@@ -20,7 +20,7 @@ import com.google.gson.Gson;
 /**
  * Created by Lana on 2/20/2017.
  */
-@WebServlet(name = "NameListEdit")
+@WebServlet(name = "NameListAdd")
 
 public class NameListEdit extends javax.servlet.http.HttpServlet {
 
@@ -54,9 +54,10 @@ public class NameListEdit extends javax.servlet.http.HttpServlet {
         String email = request.getParameter("email");
         String phoneField = request.getParameter("phoneField");
         String birthday = request.getParameter("birthday");
+        String id = request.getParameter("id");
 
         // Just print the data out to confirm we got it.
-        out.println("firstName='"+firstName+"'" + "lastName=" + lastName + "'" + "email=" + email + "'" + "phoneField=" + phoneField + "'" + "birthday=" + birthday);
+        out.println("ID='" + id + "firstName='"+firstName+"'" + "lastName=" + lastName + "'" + "email=" + email + "'" + "phoneField=" + phoneField + "'" + "birthday=" + birthday);
 
         //new instance of person
         Person person = new Person();
@@ -65,8 +66,12 @@ public class NameListEdit extends javax.servlet.http.HttpServlet {
         person.setEmail(email);
         person.setPhone(phoneField);
         person.setBirthday(birthday);
+        person.setId(id);
 
-        PersonDAO.editPerson(person);
+        boolean value = true;
+
+        //PersonDAO.addPerson(person);
+
 
 
 
@@ -75,6 +80,7 @@ public class NameListEdit extends javax.servlet.http.HttpServlet {
             out.println("Passed validation");
         } else {
             out.println("Did not pass validation");
+            value = false;
         }
 
         Matcher testLastName = lastNameValidationPattern.matcher(lastName);
@@ -82,6 +88,7 @@ public class NameListEdit extends javax.servlet.http.HttpServlet {
             out.println("Passed validation");
         } else {
             out.println("Did not pass validation");
+            value = false;
         }
 
         Matcher testEmail = emailValidationPattern.matcher(email);
@@ -89,6 +96,7 @@ public class NameListEdit extends javax.servlet.http.HttpServlet {
             out.println("Passed validation");
         } else {
             out.println("Did not pass validation");
+            value = false;
         }
 
         Matcher testPhoneField = phoneValidationPattern.matcher(phoneField);
@@ -96,6 +104,7 @@ public class NameListEdit extends javax.servlet.http.HttpServlet {
             out.println("Passed validation");
         } else {
             out.println("Did not pass validation");
+            value = false;
         }
 
         Matcher testBirthday = birthdayValidationPattern.matcher(birthday);
@@ -103,7 +112,17 @@ public class NameListEdit extends javax.servlet.http.HttpServlet {
             out.println("Passed validation");
         } else {
             out.println("Did not pass validation");
+            value = false;
         }
 
+        if (value == true) {
+            if ("".equals(person.getId())) {
+                out.println("add Person");
+                PersonDAO.addPerson(person);
+            } else {
+                out.println("Edit Person");
+                PersonDAO.editPerson(person);
+            }
+        }
     }
 }

@@ -3,12 +3,17 @@ function updateTable() {
     $.getJSON(url, null, function (json_result) {
             for (var i = 0; i < json_result.length; i++) {
                 $("#datatable").append("<tr><td>" + json_result[i].id + "</td><td>"
-                    + json_result[i].first + " " + json_result[i].last + "</td><td>"
+                    + json_result[i].first + "</td><td>"
+                    + json_result[i].last + "</td><td>"
                     + json_result[i].email + "</td><td>"
                     + json_result[i].phone + "</td><td>"
                     + json_result[i].birthday + "</td>"
-                    + "<td><button type='button' name='delete' class='deleteButton btn' value='" + json_result[i].id + "'>Delete</button></td></tr>");
+                    + "<td><button type='button' name='delete' class='deleteButton btn' value='" + json_result[i].id + "'>Delete</button></td>"
+                    + "<td><button type='button' name='edit' class='editButton btn' value='" + json_result[i].id + "'>Edit</button></td></tr>");
             }
+            console.log("Edit");
+            var buttons = $(".editButton");
+            buttons.on("click", editItem);
 
             console.log("Done");
             var buttons = $(".deleteButton");
@@ -17,10 +22,51 @@ function updateTable() {
     );
 }
 updateTable();
-// There's a button in the form with the ID "addItem"
-// Associate the function showDialogAdd with it.
-var addItemButton = $('#addItem');
-addItemButton.on("click", showDialogAdd);
+
+
+function editItem(e) {
+    console.debug("Edit");
+    console.log("Edit button was selected");
+    console.debug(e.target.value);
+
+    // Print that we got here
+    console.log("Opening add item dialog");
+
+    var id = e.target.parentNode.parentNode.querySelectorAll("td")[0].innerHTML;
+    var firstName = e.target.parentNode.parentNode.querySelectorAll("td")[1].innerHTML;
+    var lastName = e.target.parentNode.parentNode.querySelectorAll("td")[2].innerHTML;
+    var email = e.target.parentNode.parentNode.querySelectorAll("td")[3].innerHTML;
+    var phoneField = e.target.parentNode.parentNode.querySelectorAll("td")[4].innerHTML;
+    var birthday = e.target.parentNode.parentNode.querySelectorAll("td")[5].innerHTML;
+
+    $('#id').val(id);
+    $('#firstName').val(firstName);
+    $('#lastName').val(lastName);
+    $('#email').val(email);
+    $('#phoneField').val(phoneField);
+    $('#birthday').val(birthday);
+
+    //Removes the outline colored box and the glyphicon
+    //clears the boxes when reopened
+    $('#firstNameDiv').removeClass("has-success").removeClass("has-error");
+    $('#firstNameGlyph').removeClass("glyphicon-ok").removeClass("glyphicon-remove");
+
+    $('#lastNameDiv').removeClass("has-success").removeClass("has-error");
+    $('#lastNameGlyph').removeClass("glyphicon-ok").removeClass("glyphicon-remove");
+
+    $('#emailDiv').removeClass("has-success").removeClass("has-error");
+    $('#emailGlyph').removeClass("glyphicon-ok").removeClass("glyphicon-remove");
+
+    $('#phoneFieldDiv').removeClass("has-success").removeClass("has-error");
+    $('#phoneFieldGlyph').removeClass("glyphicon-ok").removeClass("glyphicon-remove");
+
+    $('#birthdayDiv').removeClass("has-success").removeClass("has-error");
+    $('#birthdayGlyph').removeClass("glyphicon-ok").removeClass("glyphicon-remove");
+
+    // Show the hidden dialog
+    $('#myModal').modal('show');
+
+}
 
 //delete button
 function deleteItem(e) {
@@ -41,6 +87,11 @@ function deleteItem(e) {
     console.debug("Delete");
     console.debug(e.target.value);
 }
+
+// There's a button in the form with the ID "addItem"
+// Associate the function showDialogAdd with it.
+var addItemButton = $('#addItem');
+addItemButton.on("click", showDialogAdd);
 
 // Called when "Add Item" button is clicked
 function showDialogAdd() {
@@ -193,19 +244,20 @@ function saveButton() {
 
     if(valid_form) {
         var url = "api/name_list_edit";
+        var fieldValueId = $("#id").val();
         var fieldValueFirstName = $("#firstName").val();
         var fieldValueLastName = $("#lastName").val();
         var fieldValueEmail = $("#email").val();
         var fieldValuePhone = $("#phoneField").val();
         var fieldValueBirthday = $("#birthday").val();
 
-        var dataToServer = { firstName : fieldValueFirstName, lastName: fieldValueLastName, email : fieldValueEmail, phoneField: fieldValuePhone, birthday : fieldValueBirthday} ;
+        var dataToServer = { id: fieldValueId, firstName : fieldValueFirstName, lastName: fieldValueLastName, email : fieldValueEmail, phoneField: fieldValuePhone, birthday : fieldValueBirthday} ;
 
         $.post(url, dataToServer, function (dataFromServer) {
             console.log(dataFromServer);
             console.log("Finished calling servlet.");
             $('#myModal').modal('hide');
-            //how to clear body of the table - could readd in the columns/rows, or remove individual rows
+            //how to clear body of the table - could read in the columns/rows, or remove individual rows
             $('#datatable tbody').remove();
             updateTable();
         });
